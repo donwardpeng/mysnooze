@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class MainPage extends StatefulWidget{
@@ -18,11 +19,34 @@ MainPage({this.analytics, this.observer});
 
 class MainPageState extends State<MainPage> {  
 int _selectedIndex = 0;
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+String messageFromPush = '';
+
+@override
+void initState(){
+   _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.getToken().then((token) {
+      print("### token for phone: ${token}");
+    });
+    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      onPushNotification(message.toString());
+    },
+    onResume: (Map<String, dynamic> message) {
+      onPushNotification(message.toString());
+    },
+    onLaunch: (Map<String, dynamic> message) {
+      onPushNotification(message.toString());
+    });
+}
+
+void onPushNotification(String message){
+  messageFromPush = message;
+}
 
 @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text('Main'),),
-    drawer: Drawer(child: AppBar(title: Text('Snooze')),),
+    drawer: Drawer(child: AppBar(title: Text(messageFromPush)),),
     bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.map), title: Text('Alarms')),

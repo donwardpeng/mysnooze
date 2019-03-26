@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
               children: <Widget>[
                 Hero(
                   tag: 'SnoozeImage',
-                  child: Image.asset('assets/snooze.jpeg'),
+                  child: Image.asset('assets/snooze.png'),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 48.0),
