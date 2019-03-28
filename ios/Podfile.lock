@@ -31,10 +31,6 @@ PODS:
   - firebase_analytics (0.0.1):
     - Firebase/Core
     - Flutter
-  - firebase_auth (0.0.1):
-    - Firebase/Auth
-    - Firebase/Core
-    - Flutter
   - firebase_core (0.0.1):
     - Firebase/Core
     - Flutter
@@ -155,7 +151,6 @@ PODS:
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
-  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
@@ -189,8 +184,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
-  firebase_auth:
-    :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -203,7 +196,6 @@ SPEC CHECKSUMS:
   cloud_firestore: 980813a98d8beb5c321b589845fabf6c4c5bd571
   Firebase: 6691d47562a780c26281ce8464518faafc90c610
   firebase_analytics: 06fd3e199bfbc003a9949b90f3e3c6332fa1299e
-  firebase_auth: a5b249720380ab4ee1c633368cbb84aac9959359
   firebase_core: c96aa8b2fcf7f5167d32f22034f502f9304952b8
   firebase_messaging: a5f5d4a9491b660f33a1f94bd0596558f820bad1
   FirebaseAnalytics: 831f1f127f4a75698e9875a87bf7e2668730d953
