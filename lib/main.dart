@@ -4,7 +4,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
 import './pages/login.dart';
-import './bloc/provider.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -20,8 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-        child: MaterialApp(
+    return MaterialApp(
       // return MaterialApp(
       // debugShowMaterialGrid: true,
       theme: ThemeData(
@@ -32,6 +30,6 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-    ));
+    );
   }
 }
