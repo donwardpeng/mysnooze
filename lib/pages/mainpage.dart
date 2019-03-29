@@ -104,9 +104,9 @@ class IncrementBloc implements BlocBase {
   // Stream to handle the counter
   //
   // outCounter is where the counter value is read from -> outCounter is an stream fed
-  // by the _inAdd sink which takes in a int, and is fed the value of counter everytime
+  // by the _inAdd sink which takes in a int, and is fed the value of counter every time
   // the _handleLogic method is called (which is the handler that is called when the
-  // _actionController stream has something in it - this is caused by adding somehing to
+  // _actionController stream has something in it - this is caused by adding something to
   // the incrementCounter stream
 
   // Overall:
@@ -125,7 +125,6 @@ class IncrementBloc implements BlocBase {
   //
   StreamController _actionController = StreamController();
   StreamSink get incrementCounter => _actionController.sink;
-
   //
   // Constructor
   //
