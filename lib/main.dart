@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 // import 'package:flutter/rendering.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -27,11 +28,10 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primarySwatch: Colors.blue,
           accentColor: Colors.indigo),
-      home: SignInPage()
-//      LoginScreen(analytics: analytics, observer: observer),
-//      navigatorObservers: [
-//        FirebaseAnalyticsObserver(analytics: analytics),
-//      ],
+      home: LoginScreen(analytics: analytics, observer: observer),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
     );
   }
 }

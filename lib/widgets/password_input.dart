@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 
 class PasswordInput extends StatefulWidget {
   @override
@@ -18,18 +19,27 @@ class StatefulPasswordInput extends State<PasswordInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: <Widget>[
-      Expanded(
-          child: TextField(
-        decoration: InputDecoration(hintText: 'Password'),
-        obscureText: obscurePassword,
-      )),
-      IconButton(
-        icon: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off),
-        onPressed: () {
-          updatePasswordVisibility();
-        },
+    return TextFormField(
+      obscureText: obscurePassword,
+      maxLength: 8,
+      decoration: InputDecoration(
+        border: const UnderlineInputBorder(),
+        filled: true,
+        hintText: '',
+        labelText: 'Password',
+        helperText: 'No more than 8 characters',
+        suffixIcon: GestureDetector(
+          dragStartBehavior: DragStartBehavior.down,
+          onTap: () {
+            setState(() {
+              obscurePassword = !obscurePassword;
+            });
+          },
+          child: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off,
+              semanticLabel:
+                  obscurePassword ? 'show password' : 'hide password'),
+        ),
       ),
-    ]);
+    );
   }
 }
