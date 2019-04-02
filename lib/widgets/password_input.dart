@@ -8,6 +8,7 @@ class PasswordInput extends StatefulWidget {
   }
 }
 
+
 class StatefulPasswordInput extends State<PasswordInput> {
   bool obscurePassword = true;
 

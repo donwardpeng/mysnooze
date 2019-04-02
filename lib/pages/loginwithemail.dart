@@ -4,10 +4,14 @@ import '../widgets/password_input.dart';
 import './mainpage.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginWithEmailPage extends StatelessWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   LoginWithEmailPage({this.analytics, this.observer});
 
@@ -38,7 +42,7 @@ class LoginWithEmailPage extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   ),
                   TextFormField(
-                    maxLength: 20,
+                    maxLength: 25,
                     decoration: InputDecoration(
                       border: const UnderlineInputBorder(),
                       helperText: 'No more than 20 characters',
@@ -46,6 +50,7 @@ class LoginWithEmailPage extends StatelessWidget {
                       hintText: '',
                       labelText: 'Username',
                     ),
+                    controller: _emailController,
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 36.0),
@@ -58,14 +63,31 @@ class LoginWithEmailPage extends StatelessWidget {
                       child: Text('LOGIN'),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => MainPage(
-                                      analytics: analytics,
-                                      observer: observer,
-                                    )));
+                        _signInWithEmailAndPassword();
+//                        Navigator.push(
+//                            context,
+//                            MaterialPageRoute(
+//                                builder: (BuildContext context) => MainPage(
+//                                      analytics: analytics,
+//                                      observer: observer,
+//                                    )));
                       })
                 ])));
   }
+// Example code of how to sign in with email and password.
+  void _signInWithEmailAndPassword() async {
+    final FirebaseUser user = await _auth.signInWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    if (user != null) {
+//      setState(() {
+//        _success = true;
+//        _userEmail = user.email;
+//      });
+//    } else {
+//      _success = false;
+    }
+  }
 }
+
