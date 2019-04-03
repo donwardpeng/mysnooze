@@ -66,7 +66,9 @@ class LoginScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                 ),
-                FacebookSignInButton(onPressed: () {}),
+                FacebookSignInButton(onPressed: () {
+                  _signInWithFacebook();
+                }),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                 ),
@@ -106,4 +108,28 @@ class LoginScreen extends StatelessWidget {
 //      }
 //    });
   }
+
+  // Example code of how to sign in with Facebook.
+  void _signInWithFacebook() async {
+    final AuthCredential credential = FacebookAuthProvider.getCredential(
+      accessToken: _tokenController.text,
+    );
+    final FirebaseUser user = await _auth.signInWithCredential(credential);
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+//    setState(() {
+//      if (user != null) {
+//        _message = 'Successfully signed in with Facebook. ' + user.uid;
+//      } else {
+//        _message = 'Failed to sign in with Facebook. ';
+//      }
+//    });
+  }
+
+
 }

@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/password_input.dart';
-import './mainpage.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginWithEmailPage extends StatelessWidget {
+class LoginWithEmailPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   LoginWithEmailPage({this.analytics, this.observer});
 
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return LoginWithEmailPageState();
+  }
+}
+
+class LoginWithEmailPageState extends State<LoginWithEmailPage> {
+  String _password;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+
   Future<void> _setAnalyticsCurrentScreen() async {
-    await analytics.setCurrentScreen(
+    await widget.analytics.setCurrentScreen(
       screenName: 'Login Screen',
       screenClassOverride: 'Login',
     );
     print('Analytics: setCurrentScreen done');
+  }
+
+  void _setPassword(String password) {
+    _password = password;
   }
 
   @override
@@ -51,11 +63,16 @@ class LoginWithEmailPage extends StatelessWidget {
                       labelText: 'Username',
                     ),
                     controller: _emailController,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 36.0),
                   ),
-                  PasswordInput(),
+                  PasswordInput(_setPassword),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 48.0),
                   ),
@@ -63,6 +80,11 @@ class LoginWithEmailPage extends StatelessWidget {
                       child: Text('LOGIN'),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
+                        print(
+                            '[LOGINWITHEMAILPAGE]_signInWithEmailAndPassword - Username = ' +
+                                _emailController.text +
+                                ', Password = ' +
+                                _password);
                         _signInWithEmailAndPassword();
 //                        Navigator.push(
 //                            context,
@@ -74,11 +96,12 @@ class LoginWithEmailPage extends StatelessWidget {
                       })
                 ])));
   }
+
 // Example code of how to sign in with email and password.
   void _signInWithEmailAndPassword() async {
     final FirebaseUser user = await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
-      password: _passwordController.text,
+      password: _password,
     );
     if (user != null) {
 //      setState(() {
@@ -90,4 +113,3 @@ class LoginWithEmailPage extends StatelessWidget {
     }
   }
 }
-

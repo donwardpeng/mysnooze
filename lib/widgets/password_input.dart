@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 
 class PasswordInput extends StatefulWidget {
+
+ final Function _setPassword;
+
+ PasswordInput([this._setPassword]);
+
   @override
   State<StatefulWidget> createState() {
     return StatefulPasswordInput();
   }
 }
 
-
 class StatefulPasswordInput extends State<PasswordInput> {
   bool obscurePassword = true;
+  final TextEditingController _passwordController = new TextEditingController();
 
   void updatePasswordVisibility() {
     setState(() {
@@ -23,6 +28,8 @@ class StatefulPasswordInput extends State<PasswordInput> {
     return TextFormField(
       obscureText: obscurePassword,
       maxLength: 8,
+      controller: _passwordController,
+      onEditingComplete: widget._setPassword(_passwordController.text),
       decoration: InputDecoration(
         border: const UnderlineInputBorder(),
         filled: true,
