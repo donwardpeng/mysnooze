@@ -16,11 +16,23 @@ class PasswordInput extends StatefulWidget {
 class StatefulPasswordInput extends State<PasswordInput> {
   bool obscurePassword = true;
   final TextEditingController _passwordController = new TextEditingController();
+  final FocusNode _textFocus = new FocusNode();
+
+  @override
+  void initState() {
+    _passwordController.addListener(onChange);
+    _textFocus.addListener(onChange);
+    super.initState();
+  }
 
   void updatePasswordVisibility() {
     setState(() {
       obscurePassword = !obscurePassword;
     });
+  }
+
+  void onChange(){
+    widget._setPassword(_passwordController.text);
   }
 
   @override
@@ -29,7 +41,8 @@ class StatefulPasswordInput extends State<PasswordInput> {
       obscureText: obscurePassword,
       maxLength: 8,
       controller: _passwordController,
-      onEditingComplete: widget._setPassword(_passwordController.text),
+//      textInputAction: widget._setPassword(_passwordController.text),
+//      onEditingComplete: widget._setPassword(_passwordController.text),
       decoration: InputDecoration(
         border: const UnderlineInputBorder(),
         filled: true,

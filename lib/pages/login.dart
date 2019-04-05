@@ -7,12 +7,14 @@ import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import './loginwithemail.dart';
+import 'mainpage.dart';
 
 class LoginScreen extends StatelessWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  BuildContext _context;
 
   LoginScreen({this.analytics, this.observer});
 
@@ -27,6 +29,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _setAnalyticsCurrentScreen();
+    _context = context;
     return Scaffold(
         appBar: AppBar(title: Text('Login Screen')),
         body: Container(
@@ -99,6 +102,16 @@ class LoginScreen extends StatelessWidget {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
+    if(user != null){
+      Navigator.pushReplacement(
+          _context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  MainPage(
+                    analytics: analytics,
+                    observer: observer,
+                  )));
+    }
 //    setState(() {
 //      if (user != null) {
 //        _success = true;
@@ -112,7 +125,7 @@ class LoginScreen extends StatelessWidget {
   // Example code of how to sign in with Facebook.
   void _signInWithFacebook() async {
     final AuthCredential credential = FacebookAuthProvider.getCredential(
-      accessToken: _tokenController.text,
+//      accessToken: _tokenController.text,
     );
     final FirebaseUser user = await _auth.signInWithCredential(credential);
     assert(user.email != null);

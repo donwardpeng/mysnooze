@@ -4,6 +4,7 @@ import '../widgets/password_input.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'mainpage.dart';
 
 class LoginWithEmailPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
@@ -20,6 +21,7 @@ class LoginWithEmailPage extends StatefulWidget {
 
 class LoginWithEmailPageState extends State<LoginWithEmailPage> {
   String _password;
+  bool _success = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
 
@@ -85,14 +87,27 @@ class LoginWithEmailPageState extends State<LoginWithEmailPage> {
                                 _emailController.text +
                                 ', Password = ' +
                                 _password);
+                        final snackBar = SnackBar(
+                          content: Text('Successful Login'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              // Some code to undo the change!
+                            },
+                          ),
+                        );
                         _signInWithEmailAndPassword();
-//                        Navigator.push(
-//                            context,
-//                            MaterialPageRoute(
-//                                builder: (BuildContext context) => MainPage(
-//                                      analytics: analytics,
-//                                      observer: observer,
-//                                    )));
+                        if (_success) {
+                          Scaffold.of(context).showSnackBar(
+                              snackBar);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => MainPage(
+                                        analytics: widget.analytics,
+                                        observer: widget.observer,
+                                      )));
+                        }
                       })
                 ])));
   }
@@ -104,12 +119,13 @@ class LoginWithEmailPageState extends State<LoginWithEmailPage> {
       password: _password,
     );
     if (user != null) {
-//      setState(() {
-//        _success = true;
+      // Find the Scaffold in the Widget tree and use it to show a SnackBar!
+      setState(() {
+        _success = true;
 //        _userEmail = user.email;
-//      });
-//    } else {
-//      _success = false;
+      });
+    } else {
+      _success = false;
     }
   }
 }
