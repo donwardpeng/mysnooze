@@ -25,6 +25,12 @@ class StatefulPasswordInput extends State<PasswordInput> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void updatePasswordVisibility() {
     setState(() {
       obscurePassword = !obscurePassword;

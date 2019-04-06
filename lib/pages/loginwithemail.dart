@@ -21,9 +21,9 @@ class LoginWithEmailPage extends StatefulWidget {
 
 class LoginWithEmailPageState extends State<LoginWithEmailPage> {
   String _password;
-  bool _success = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> _setAnalyticsCurrentScreen() async {
     await widget.analytics.setCurrentScreen(
@@ -42,90 +42,97 @@ class LoginWithEmailPageState extends State<LoginWithEmailPage> {
     _setAnalyticsCurrentScreen();
     return Scaffold(
         appBar: AppBar(title: Text('Login with Email')),
-        body: Container(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Hero(
-                    tag: 'SnoozeImage',
-                    child: Image.asset('assets/snooze.png'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  ),
-                  TextFormField(
-                    maxLength: 25,
-                    decoration: InputDecoration(
-                      border: const UnderlineInputBorder(),
-                      helperText: 'No more than 20 characters',
-                      filled: true,
-                      hintText: '',
-                      labelText: 'Username',
-                    ),
-                    controller: _emailController,
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 36.0),
-                  ),
-                  PasswordInput(_setPassword),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 48.0),
-                  ),
-                  RaisedButton(
-                      child: Text('LOGIN'),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        print(
-                            '[LOGINWITHEMAILPAGE]_signInWithEmailAndPassword - Username = ' +
-                                _emailController.text +
-                                ', Password = ' +
-                                _password);
-                        final snackBar = SnackBar(
-                          content: Text('Successful Login'),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () {
-                              // Some code to undo the change!
+        body: Builder(
+            builder: (context) => Form(
+                key: _formKey,
+                child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Hero(
+                            tag: 'SnoozeImage',
+                            child: Image.asset('assets/snooze.png'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          ),
+                          TextFormField(
+                            maxLength: 25,
+                            decoration: InputDecoration(
+                              border: const UnderlineInputBorder(),
+                              helperText: 'No more than 20 characters',
+                              filled: true,
+                              hintText: '',
+                              labelText: 'Username',
+                            ),
+                            controller: _emailController,
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
                             },
                           ),
-                        );
-                        _signInWithEmailAndPassword();
-                        if (_success) {
-                          Scaffold.of(context).showSnackBar(
-                              snackBar);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) => MainPage(
-                                        analytics: widget.analytics,
-                                        observer: widget.observer,
-                                      )));
-                        }
-                      })
-                ])));
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 36.0),
+                          ),
+                          PasswordInput(_setPassword),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 48.0),
+                          ),
+                          RaisedButton(
+                              child: Text('LOGIN'),
+                              color: Theme.of(context).primaryColor,
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  _signInWithEmailAndPassword(context);
+                                }
+                              }),
+                        ])))));
   }
 
 // Example code of how to sign in with email and password.
-  void _signInWithEmailAndPassword() async {
-    final FirebaseUser user = await _auth.signInWithEmailAndPassword(
+  void _signInWithEmailAndPassword(context) async {
+    final FirebaseUser user = await _auth
+        .signInWithEmailAndPassword(
       email: _emailController.text,
       password: _password,
-    );
+    )
+        .catchError((onError) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Unsuccesful login - try again.'),
+      ));
+    });
+    print('[LOGINWITHEMAILPAGE]_signInWithEmailAndPassword - Username = ' +
+        _emailController.text +
+        ', Password = ' +
+        _password);
     if (user != null) {
+      print(
+          '[LOGINWITHEMAILPAGE]_signInWithEmailAndPassword - successful login');
       // Find the Scaffold in the Widget tree and use it to show a SnackBar!
-      setState(() {
-        _success = true;
-//        _userEmail = user.email;
-      });
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Successful Login as ' + user.email),
+      ));
+      await new Future.delayed(const Duration(seconds: 2));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => MainPage(
+                    analytics: widget.analytics,
+                    observer: widget.observer,
+                  )));
     } else {
-      _success = false;
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Unsuccesful login - try again.'),
+      ));
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 }
