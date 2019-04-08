@@ -63,24 +63,15 @@ class MainPageState extends State<MainPage> {
         child: AppBar(title: Text(messageFromPush)),
       ),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Row(mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[IconButton(icon: Icon(Icons.alarm))],)
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.alarm), title: Text('Alarms')),
-      //     BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('List')),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.tune), title: Text('Filter')),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   fixedColor: Colors.blueAccent,
-      //   onTap: _onItemTapped,
-        
-      // ),
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              IconButton(icon: Icon(Icons.search), onPressed: () {_onItemTapped(0);}, ),
+              IconButton(icon: Icon(Icons.tune), onPressed: () {_onItemTapped(1);})
+            ],
+          )),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         tooltip: 'Add an Alarm',
@@ -95,12 +86,7 @@ class MainPageState extends State<MainPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index == 2) {
-        // _scaffoldKey.currentState.showBottomSheet<Null>((BuildContext context) {
-        //   return BottomSheetFilter(_mapWithIncidents,
-        //       _mapWithIncidents.mapWithIncidentsState.addMarkersToMap);
-        // });
-      }
+      print('[MAINPAGE] bottomActionBar pressed - index = ' + _selectedIndex.toString());
     });
   }
 }

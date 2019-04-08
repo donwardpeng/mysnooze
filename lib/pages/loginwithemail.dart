@@ -93,7 +93,8 @@ class LoginWithEmailPageState extends State<LoginWithEmailPage> {
 
 // Example code of how to sign in with email and password.
   void _signInWithEmailAndPassword(context) async {
-    final FirebaseUser user = await _auth.signInWithEmailAndPassword(
+    final FirebaseUser user = await _auth
+        .signInWithEmailAndPassword(
       email: _emailController.text,
       password: _password,
     )
