@@ -32,61 +32,73 @@ class LoginScreen extends StatelessWidget {
     _context = context;
     return Scaffold(
         appBar: AppBar(title: Text('Login Screen')),
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Hero(
-                  tag: 'SnoozeImage',
-                  child: Image.asset('assets/snooze.png'),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 32.0),
-                ),
-                RaisedButton(
-                    child: Text('I already have an email account'),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  LoginWithEmailPage(
-                                    analytics: analytics,
-                                    observer: observer,
-                                  )));
-                    }),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                ),
-                GoogleSignInButton(onPressed: () {
-                  _signInWithGoogle();
-                }),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                ),
-                FacebookSignInButton(onPressed: () {
-                  _signInWithFacebook();
-                }),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                ),
-                Text(
-                  'Sign in anonomously',
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                ),
-                Text('Create an account'),
-              ]),
-        ));
+        body: Builder(
+            builder: (context) => Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Hero(
+                          tag: 'SnoozeImage',
+                          child: Image.asset('assets/snooze.png'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 32.0),
+                        ),
+                        GoogleSignInButton(onPressed: () {
+                          _signInWithGoogle(context);
+                        }),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                        ),
+                        FacebookSignInButton(onPressed: () {
+                          _signInWithFacebook();
+                        }),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                        ),
+                        RaisedButton(
+                            child: Text('Sign in with email'),
+                            color: Theme.of(context).accentColor,
+                            textColor: Colors.white,
+                            textTheme: ButtonTextTheme.primary,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          LoginWithEmailPage(
+                                            analytics: analytics,
+                                            observer: observer,
+                                          )));
+                            }),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                        ),
+                        OutlineButton(
+                          child: Text('Create an account'),
+                          onPressed: () {
+                            print('create account pressed');
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Sign in anonymously',
+                          ),
+                          onPressed: () {
+                            print("sign in anonymously pressed");
+                          },
+                        ),
+                      ]),
+                )));
   }
 
-  void _signInWithGoogle() async {
+  void _signInWithGoogle(context) async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -94,7 +106,12 @@ class LoginScreen extends StatelessWidget {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final FirebaseUser user = await _auth.signInWithCredential(credential);
+    final FirebaseUser user =
+        await _auth.signInWithCredential(credential).catchError((onError) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Unsuccesful login - try again.'),
+      ));
+    });
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
@@ -102,31 +119,26 @@ class LoginScreen extends StatelessWidget {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    if(user != null){
+    if (user != null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Successful Login as ' + user.email),
+      ));
+      await new Future.delayed(const Duration(seconds: 2));
       Navigator.pushReplacement(
           _context,
           MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  MainPage(
+              builder: (BuildContext context) => MainPage(
                     analytics: analytics,
                     observer: observer,
                   )));
     }
-//    setState(() {
-//      if (user != null) {
-//        _success = true;
-//        _userID = user.uid;
-//      } else {
-//        _success = false;
-//      }
-//    });
   }
 
   // Example code of how to sign in with Facebook.
   void _signInWithFacebook() async {
     final AuthCredential credential = FacebookAuthProvider.getCredential(
 //      accessToken: _tokenController.text,
-    );
+        );
     final FirebaseUser user = await _auth.signInWithCredential(credential);
     assert(user.email != null);
     assert(user.displayName != null);
@@ -143,6 +155,4 @@ class LoginScreen extends StatelessWidget {
 //      }
 //    });
   }
-
-
 }

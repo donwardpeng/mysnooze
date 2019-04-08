@@ -62,18 +62,25 @@ class MainPageState extends State<MainPage> {
       drawer: Drawer(
         child: AppBar(title: Text(messageFromPush)),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.alarm), title: Text('Alarms')),
-          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('List')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.tune), title: Text('Filter')),
-        ],
-        currentIndex: _selectedIndex,
-        fixedColor: Colors.blueAccent,
-        onTap: _onItemTapped,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[IconButton(icon: Icon(Icons.alarm))],)
       ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.alarm), title: Text('Alarms')),
+      //     BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('List')),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.tune), title: Text('Filter')),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   fixedColor: Colors.blueAccent,
+      //   onTap: _onItemTapped,
+        
+      // ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         tooltip: 'Add an Alarm',
@@ -81,6 +88,7 @@ class MainPageState extends State<MainPage> {
           bloc.incrementCounter.add(null);
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
