@@ -4,6 +4,8 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'dart:async';
+import '../helpers/readAlarms.dart';
+import '../helpers/alarmfilter.dart';
 
 import '../bloc/blocbase.dart';
 
@@ -25,6 +27,8 @@ class MainPageState extends State<MainPage> {
   String messageFromPush = '';
   // ValueHandler _valueHandler =ValueHandler();
   IncrementBloc bloc = new IncrementBloc();
+  AlarmStore _alarmStore = new AlarmStore();
+  AlarmFilter _alarmFilter = new AlarmFilter();
 
   @override
   void initState() {
@@ -39,6 +43,8 @@ class MainPageState extends State<MainPage> {
     }, onLaunch: (Map<String, dynamic> message) {
       onPushNotification(message.toString());
     });
+
+    _alarmStore.readAlarms(_alarmFilter);
   }
 
   void onPushNotification(String message) {
@@ -51,14 +57,20 @@ class MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text('Main'),
       ),
-      body: Column(children: <Widget>[
-        StreamBuilder(
-            stream: bloc.outCounter,
-            initialData: 0,
-            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-              return Text(snapshot.data.toString());
-            }),
-      ]),
+      body: ListView.builder(
+          itemCount: _alarmStore.getAlarmList().length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            return new Text(_alarmStore.getAlarmList().elementAt(index).dateTime.toString());
+          }),
+
+      // Column(children: <Widget>[
+      //   StreamBuilder(
+      //       stream: bloc.outCounter,
+      //       initialData: 0,
+      //       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+      //         return Text(snapshot.data.toString());
+      //       }),
+      // ]),
       drawer: Drawer(
         child: AppBar(title: Text(messageFromPush)),
       ),
@@ -68,8 +80,17 @@ class MainPageState extends State<MainPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              IconButton(icon: Icon(Icons.search), onPressed: () {_onItemTapped(0);}, ),
-              IconButton(icon: Icon(Icons.tune), onPressed: () {_onItemTapped(1);})
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  _onItemTapped(0);
+                },
+              ),
+              IconButton(
+                  icon: Icon(Icons.tune),
+                  onPressed: () {
+                    _onItemTapped(1);
+                  })
             ],
           )),
       floatingActionButton: FloatingActionButton(
@@ -86,7 +107,8 @@ class MainPageState extends State<MainPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      print('[MAINPAGE] bottomActionBar pressed - index = ' + _selectedIndex.toString());
+      print('[MAINPAGE] bottomActionBar pressed - index = ' +
+          _selectedIndex.toString());
     });
   }
 }

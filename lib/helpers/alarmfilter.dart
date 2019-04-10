@@ -1,11 +1,13 @@
-class IncidentFilter {
+
+
+class AlarmFilter {
   List<FilterCondition> _filters;
 
-  IncidentFilter() {
+  AlarmFilter() {
     _filters = new List<FilterCondition>();
   }
 
-  IncidentFilter addWhere(String field, String conditionKey, String conditionValue) {
+  AlarmFilter addWhere(String field, String conditionKey, String conditionValue) {
     this._filters.add(new FilterCondition(field, conditionKey, conditionValue));
     return this;
   }

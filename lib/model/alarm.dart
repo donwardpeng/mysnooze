@@ -1,16 +1,19 @@
 import 'package:latlong/latlong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Alarm {
 DateTime _dateTime;
-LatLng _location;
+// LatLng _location;
 
-Alarm({date: DateTime, location: LatLng }) {
+GeoPoint _location;
+
+Alarm({date: DateTime, location: GeoPoint }) {
 _dateTime = date;
 _location = location;
 }
 
 DateTime get dateTime => _dateTime;
 set dateTime(DateTime dateTime) => _dateTime = dateTime;
-LatLng get location => _location;
-set location(LatLng location) => _location = location;
+GeoPoint get location => _location;
+set location(GeoPoint location) => _location = location;
 }

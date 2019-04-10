@@ -1,23 +1,27 @@
-import 'package:flutter/material.dart';
-
-import 'alarm_filter.dart';
+import 'alarmfilter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../model/alarm.dart';
 
-class ReadAlarms {
-  void readAlarms(AlarmFilter alarmFilter, Function cb) {
+class AlarmStore {
+  List<Alarm> _alarms = new List<Alarm>();
+
+  void readAlarms(AlarmFilter alarmFilter) {
     Query query = Firestore.instance.collection('Events').limit(999);
-    alarmFilter.filters.forEach((FilterCondition condition) {
-      query = this._setWhere(query, condition);
-    });
+    // alarmFilter.filters.forEach((FilterCondition condition) {
+    //   query = this._setWhere(query, condition);
+    // });
 
     query.snapshots().listen((data) {
       data.documents.forEach((doc) {
-        // _incidents.putIfAbsent(doc['report_number'], () =>
-        //   new DPDIncident(
-        //     address: doc['address'],
+        _alarms.add(new Alarm(date: doc['Date'], location: doc['Location']));
       });
     });
   }
+
+  List<Alarm> getAlarmList(){
+    return _alarms;
+  }
+
 
   Query _setWhere(Query query, FilterCondition condition) {
     // TODO is there a language appropriate way to pass these named parameters by a variable?
