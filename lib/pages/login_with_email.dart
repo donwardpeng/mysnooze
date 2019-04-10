@@ -4,7 +4,7 @@ import '../widgets/password_input.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'mainpage.dart';
+import 'main_page.dart';
 
 class LoginWithEmailPage extends StatefulWidget {
   final FirebaseAnalytics analytics;

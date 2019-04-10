@@ -1,13 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'dart:async';
-import '../helpers/readAlarms.dart';
-import '../helpers/alarmfilter.dart';
-
-import '../bloc/blocbase.dart';
+import '../helpers/read_alarms.dart';
+import '../helpers/alarm_filter.dart';
+import '../bloc/bloc_base.dart';
 
 class MainPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
@@ -28,7 +28,7 @@ class MainPageState extends State<MainPage> {
   // ValueHandler _valueHandler =ValueHandler();
   IncrementBloc bloc = new IncrementBloc();
   AlarmStore _alarmStore = new AlarmStore();
-  AlarmFilter _alarmFilter = new AlarmFilter();
+  // AlarmFilter _alarmFilter = new AlarmFilter();
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class MainPageState extends State<MainPage> {
       onPushNotification(message.toString());
     });
 
-    _alarmStore.readAlarms(_alarmFilter);
+    // _alarmStore.readAlarms(_alarmFilter);
   }
 
   void onPushNotification(String message) {
@@ -57,11 +57,21 @@ class MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text('Main'),
       ),
-      body: ListView.builder(
-          itemCount: _alarmStore.getAlarmList().length,
-          itemBuilder: (BuildContext ctxt, int index) {
-            return new Text(_alarmStore.getAlarmList().elementAt(index).dateTime.toString());
-          }),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('Events').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) return new Text('${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return new Center(
+                  child: CircularProgressIndicator(
+                value: null,
+              ));
+            default:
+              return new ListView(children: createChildren(snapshot));
+          }
+        },
+      ),
 
       // Column(children: <Widget>[
       //   StreamBuilder(
@@ -102,6 +112,12 @@ class MainPageState extends State<MainPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
+  }
+
+  List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data.documents
+        .map((document) => new Text(document['Date'].toString()))
+        .toList();
   }
 
   void _onItemTapped(int index) {

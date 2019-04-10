@@ -6,8 +6,8 @@ import 'dart:async';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import './loginwithemail.dart';
-import 'mainpage.dart';
+import './login_with_email.dart';
+import 'main_page.dart';
 
 class LoginScreen extends StatelessWidget {
   final FirebaseAnalytics analytics;

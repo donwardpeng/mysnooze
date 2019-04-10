@@ -1,4 +1,4 @@
-import 'alarmfilter.dart';
+import 'alarm_filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/alarm.dart';
 
@@ -22,6 +22,9 @@ class AlarmStore {
     return _alarms;
   }
 
+  bool hasResults() {
+    return _alarms.length > 0;
+  }
 
   Query _setWhere(Query query, FilterCondition condition) {
     // TODO is there a language appropriate way to pass these named parameters by a variable?
