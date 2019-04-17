@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-
-import './pages/login.dart';
+import './ui/theme.dart';
+import './ui/login.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -23,10 +23,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // return MaterialApp(
       // debugShowMaterialGrid: true,
-      theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.blue,
-          accentColor: Colors.indigo),
+      debugShowCheckedModeBanner: false,
+      theme: buildTheme(),
       home: LoginScreen(analytics: analytics, observer: observer),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
