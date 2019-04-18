@@ -10,10 +10,13 @@ ThemeData buildTheme() {
         fontSize: 55.0,
         color: Colors.amber,
       ),
+      button: base.button.copyWith(
+        fontFamily: 'Montserrat',
+        fontSize: 16.0,
+        color: Colors.white
+      )
     );
   }
-
-  
 
   // We want to override a default light blue theme.
   final ThemeData base = ThemeData.light();

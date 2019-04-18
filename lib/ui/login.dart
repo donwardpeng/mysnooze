@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline,
                             )),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 48.0),
+                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 72.0),
                         ),
                         GoogleSignInButton(onPressed: () {
                           _signInWithGoogle(context);
@@ -81,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                           padding: EdgeInsets.all(8.0),
                         ),
                         RaisedButton(
-                            child: Text('Sign in with email'),
+                            child: Text('Sign in/Create Account with Email'),
                             color: Theme.of(context).accentColor,
                             textColor: Colors.white,
                             textTheme: ButtonTextTheme.primary,
@@ -96,26 +96,19 @@ class LoginScreen extends StatelessWidget {
                                           )));
                             }),
                         Padding(
-                          padding: EdgeInsets.all(2.0),
-                        ),
-                        FlatButton(
-                          child: Text('Create an account'),
-                          color: Color.fromARGB(32, 0, 0, 0),
-                          onPressed: () {
-                            print('create account pressed');
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(2.0),
+                          padding: EdgeInsets.all(8.0),
                         ),
                         FlatButton(
                           child: Text(
-                            'Sign in anonymously',
+                            'Skip login - no account',
                           ),
                           color: Color.fromARGB(32, 0, 0, 0),
                           onPressed: () {
                             print("sign in anonymously pressed");
                           },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(4.0),
                         ),
                       ]),
                 )));

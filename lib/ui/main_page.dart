@@ -70,7 +70,7 @@ class MainPageState extends State<MainPage> {
             default:
               return new ListView(children: createChildren(snapshot));
           }
-        },  
+        },
       ),
 
       // Column(children: <Widget>[
@@ -116,11 +116,16 @@ class MainPageState extends State<MainPage> {
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.documents
-        .map((document) => (
-          Column(children: <Widget>[Text(document['Date'].toString()),
-          Text(document['Location'])
-          ],)))
+        .map((document) => (getAlarmRows(document)))
         .toList();
+  }
+
+  Widget getAlarmRows(DocumentSnapshot doc){
+    return Row(
+              children: <Widget>[
+                Text(doc['Date'].toString()),
+                Text(doc['Location'].toString())
+              ],);
   }
 
   void _onItemTapped(int index) {
