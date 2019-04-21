@@ -1,6 +1,6 @@
 import 'alarm_filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../model/alarm.dart';
+import '../models/alarm.dart';
 
 class AlarmStore {
   List<Alarm> _alarms = new List<Alarm>();

@@ -5,12 +5,17 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import './ui/theme.dart';
 import './ui/login.dart';
+import './state_widget.dart';
+import './ui/main_page.dart';
+import './ui/login.dart';
+import './ui/login_with_email.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
-  runApp(MyApp());
+  runApp(new StateWidget(
+      child: new MyApp(),));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,14 +26,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // return MaterialApp(
-      // debugShowMaterialGrid: true,
       debugShowCheckedModeBanner: false,
+      title: "My Snooze",
       theme: buildTheme(),
-      home: LoginScreen(analytics: analytics, observer: observer),
+      // home: LoginScreen(analytics: analytics, observer: observer),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
+      routes: {
+        '/': (context) => MainPage(),
+        '/login': (context) => LoginScreen(),
+        '/loginWithEmail': (context) => LoginWithEmailPage(),
+      },
     );
   }
 }

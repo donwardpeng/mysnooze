@@ -6,8 +6,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'dart:async';
 import '../helpers/read_alarms.dart';
-import '../helpers/alarm_filter.dart';
 import '../bloc/bloc_base.dart';
+import '../models/state.dart';
+import '../state_widget.dart';
+import './login.dart';
 
 class MainPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
@@ -23,6 +25,7 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
+  StateModel appState;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageFromPush = '';
   // ValueHandler _valueHandler =ValueHandler();
@@ -53,7 +56,37 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    // Build the content depending on the state:
+    appState = StateWidget.of(context).state; 
+    return _buildContent();
+   
+  }
+
+Widget _buildContent() {
+    if (appState.isLoading) {
+        print("IsLoading");
+      return _buildMainScreenContent(
+        // body: _buildLoadingIndicator(),
+      );
+    } else if (!appState.isLoading && appState.user == null) {
+        print("Not Logged In");
+      return new LoginScreen();
+    } else {
+      print("Already Logged In");
+      return _buildMainScreenContent(
+        // body: _buildTabsContent(),
+      );
+    }
+  }
+
+  Center _buildLoadingIndicator() {
+    return Center(
+      child: new CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildMainScreenContent(){
+     return Scaffold(
       appBar: AppBar(
         title: Text('Main'),
       ),
