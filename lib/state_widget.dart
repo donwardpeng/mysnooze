@@ -55,17 +55,40 @@ class _StateWidgetState extends State<StateWidget> {
     }
   }
 
-  Future<Null> signInWithGoogle() async {
+  Future<Null> signInWithGoogle({theContext:BuildContext}) async {
     if (googleAccount == null) {
       // Start the sign-in process:
       googleAccount = await googleSignIn.signIn();
     }
-    FirebaseUser firebaseUser = await signIntoFirebase(googleAccount);
+    FirebaseUser firebaseUser = await signIntoFirebase(googleAccount).catchError((onError) {
+      Scaffold.of(theContext).showSnackBar(SnackBar(
+        content: Text('Unsuccesful login - try again.'),
+      ));
+    });
+    if (firebaseUser != null) {
+      Scaffold.of(theContext).showSnackBar(SnackBar(
+        content: Text('Successful Login as ' + firebaseUser.email),
+      ));
+    };
     setState(() {
       state.isLoading = false;
       state.user = firebaseUser;
     });
   }
+
+  Future<Null> signOutWithGoogle() async {
+    if (googleAccount == null) {
+      // Start the sign-in process:
+      return;
+    }
+    await FirebaseAuth.instance.signOut();
+    setState(() {
+      googleAccount = null;
+      state.isLoading = false;
+      state.user = null;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {

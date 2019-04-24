@@ -8,13 +8,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import './login_with_email.dart';
 import 'main_page.dart';
-import 'theme.dart';
+import '../models/state.dart';
+import '../state_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  StateModel appState;
   BuildContext _context;
 
   LoginScreen({this.analytics, this.observer});
@@ -30,6 +32,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _setAnalyticsCurrentScreen();
+    appState = StateWidget.of(context).state;
     _context = context;
     return Scaffold(
         // appBar: AppBar(title: Text('My Snooze'),
@@ -69,7 +72,8 @@ class LoginScreen extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 72.0),
                         ),
                         GoogleSignInButton(onPressed: () {
-                          _signInWithGoogle(context);
+                          // _signInWithGoogle(context);
+                          StateWidget.of(context).signInWithGoogle(theContext: context);
                         }),
                         Padding(
                           padding: EdgeInsets.all(8.0),

@@ -23,15 +23,15 @@ class MainPage extends StatefulWidget {
   }
 }
 
+//**Main Page State Class */
+
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   StateModel appState;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageFromPush = '';
-  // ValueHandler _valueHandler =ValueHandler();
   IncrementBloc bloc = new IncrementBloc();
   AlarmStore _alarmStore = new AlarmStore();
-  // AlarmFilter _alarmFilter = new AlarmFilter();
 
   @override
   void initState() {
@@ -46,8 +46,6 @@ class MainPageState extends State<MainPage> {
     }, onLaunch: (Map<String, dynamic> message) {
       onPushNotification(message.toString());
     });
-
-    // _alarmStore.readAlarms(_alarmFilter);
   }
 
   void onPushNotification(String message) {
@@ -57,24 +55,27 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     // Build the content depending on the state:
-    appState = StateWidget.of(context).state; 
+    appState = StateWidget.of(context).state;
     return _buildContent();
-   
   }
 
-Widget _buildContent() {
+  Widget _buildContent() {
+    print("State of Loading = " +
+        appState.isLoading.toString() +
+        ", User = " +
+        appState.user.toString());
     if (appState.isLoading) {
-        print("IsLoading");
+      print("IsLoading");
       return _buildMainScreenContent(
-        // body: _buildLoadingIndicator(),
+        body: _buildLoadingIndicator(),
       );
     } else if (!appState.isLoading && appState.user == null) {
-        print("Not Logged In");
+      print("Not Logged In");
       return new LoginScreen();
     } else {
       print("Already Logged In");
       return _buildMainScreenContent(
-        // body: _buildTabsContent(),
+        body: _buildMainScreenList(),
       );
     }
   }
@@ -85,38 +86,20 @@ Widget _buildContent() {
     );
   }
 
-  Widget _buildMainScreenContent(){
-     return Scaffold(
+  Widget _buildMainScreenContent({Widget body}) {
+    return Scaffold(
       appBar: AppBar(
         title: Text('Main'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Events').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) return new Text('${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return new Center(
-                  child: CircularProgressIndicator(
-                value: null,
-              ));
-            default:
-              return new ListView(children: createChildren(snapshot));
-          }
-        },
-      ),
-
-      // Column(children: <Widget>[
-      //   StreamBuilder(
-      //       stream: bloc.outCounter,
-      //       initialData: 0,
-      //       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-      //         return Text(snapshot.data.toString());
-      //       }),
-      // ]),
+      body: body,
       drawer: Drawer(
-        child: AppBar(title: Text(messageFromPush)),
-      ),
+          child: Column(children: <Widget>[
+        AppBar(title: Text(messageFromPush)),
+        RaisedButton(
+          child: Text("Sign Out"),
+          onPressed: () {StateWidget.of(context).signOutWithGoogle();},
+        )
+      ])),
       bottomNavigationBar: BottomAppBar(
           shape: CircularNotchedRectangle(),
           child: Row(
@@ -147,18 +130,39 @@ Widget _buildContent() {
     );
   }
 
+  Widget _buildMainScreenList() {
+    return Column(children: <Widget>[
+      StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('Events').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) return new Text('${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return new Center(
+                  child: CircularProgressIndicator(
+                value: null,
+              ));
+            default:
+              return new ListView(children: createChildren(snapshot));
+          }
+        },
+      )
+    ]);
+  }
+
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.documents
         .map((document) => (getAlarmRows(document)))
         .toList();
   }
 
-  Widget getAlarmRows(DocumentSnapshot doc){
+  Widget getAlarmRows(DocumentSnapshot doc) {
     return Row(
-              children: <Widget>[
-                Text(doc['Date'].toString()),
-                Text(doc['Location'].toString())
-              ],);
+      children: <Widget>[
+        Text(doc['Date'].toString()),
+        Text(doc['Location'].toString())
+      ],
+    );
   }
 
   void _onItemTapped(int index) {
