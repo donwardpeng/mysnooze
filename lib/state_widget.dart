@@ -65,11 +65,12 @@ class _StateWidgetState extends State<StateWidget> {
         content: Text('Unsuccesful login - try again.'),
       ));
     });
-    if (firebaseUser != null) {
+    if (firebaseUser != null && !state.isLoading) {
       Scaffold.of(theContext).showSnackBar(SnackBar(
         content: Text('Successful Login as ' + firebaseUser.email),
       ));
     };
+    await new Future.delayed(const Duration(seconds: 3));
     setState(() {
       state.isLoading = false;
       state.user = firebaseUser;

@@ -97,7 +97,9 @@ class MainPageState extends State<MainPage> {
         AppBar(title: Text(messageFromPush)),
         RaisedButton(
           child: Text("Sign Out"),
-          onPressed: () {StateWidget.of(context).signOutWithGoogle();},
+          onPressed: () {
+            StateWidget.of(context).signOutWithGoogle();
+          },
         )
       ])),
       bottomNavigationBar: BottomAppBar(
@@ -131,23 +133,21 @@ class MainPageState extends State<MainPage> {
   }
 
   Widget _buildMainScreenList() {
-    return Column(children: <Widget>[
-      StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Events').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) return new Text('${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return new Center(
-                  child: CircularProgressIndicator(
-                value: null,
-              ));
-            default:
-              return new ListView(children: createChildren(snapshot));
-          }
-        },
-      )
-    ]);
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('Events').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) return new Text('${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new Center(
+                child: CircularProgressIndicator(
+              value: null,
+            ));
+          default:
+            return new ListView(children: createChildren(snapshot));
+        }
+      },
+    );
   }
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
