@@ -53,6 +53,12 @@ flutter:
   assets:
     - assets/snooze.png
     - assets/alarmclock.png
+    - assets/alarm1.jpg
+    - assets/alarm2.jpg
+    - assets/alarm3.jpg
+    - assets/alarm4.jpg
+    - assets/alarm5.jpg
+
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -9,7 +9,9 @@ import '../helpers/read_alarms.dart';
 import '../bloc/bloc_base.dart';
 import '../models/state.dart';
 import '../state_widget.dart';
+import '../widgets/alarm_card.dart';
 import './login.dart';
+import '../mocks/alarms.dart';
 
 class MainPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
@@ -151,9 +153,13 @@ class MainPageState extends State<MainPage> {
   }
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.documents
-        .map((document) => (getAlarmRows(document)))
-        .toList();
+    // return snapshot.data.documents
+    //     .map((document) => (getAlarmRows(document)))
+    //     .toList();
+  List<AlarmCard> alarmCards = new List<AlarmCard>();
+  AlarmMocks mocks = new AlarmMocks();
+  mocks.getMockAlarms().forEach((alarm) => (alarmCards.add(new AlarmCard(alarm)))); 
+  return alarmCards;
   }
 
   Widget getAlarmRows(DocumentSnapshot doc) {

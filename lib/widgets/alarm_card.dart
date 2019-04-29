@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/alarm.dart';
 
@@ -8,10 +9,10 @@ class AlarmCard extends StatelessWidget {
   Function onFavoriteButtonPressed;
 
   AlarmCard(
-      {@required this.alarm,
+      [@required this.alarm,
       // @required this.inFavorites,
       // @required this.onFavoriteButtonPressed
-      });
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,9 @@ class AlarmCard extends StatelessWidget {
                 Icon(Icons.timer, size: 20.0),
                 SizedBox(width: 5.0),
                 Text(
-                  alarm.duration.toString(),
+                  new DateFormat.yMMMMd().format(alarm.dateTime) + ' ' + 
+                  new DateFormat.jm().format(alarm.dateTime)
+
                 ),
               ],
             ),
@@ -72,7 +75,7 @@ class AlarmCard extends StatelessWidget {
                 children: <Widget>[
                   AspectRatio(
                     aspectRatio: 16.0 / 9.0,
-                    child: Image.asset('./assets/snooze.png', fit: BoxFit.cover) 
+                    child: Image.asset('./assets/alarm'+alarm.id.toString()+'.jpg', fit: BoxFit.cover) 
                     // Image.network(
                     //   recipe.imageURL,
                     //   fit: BoxFit.cover,

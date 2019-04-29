@@ -9,9 +9,12 @@ Duration _duration;
 GeoPoint _location;
 
 
-Alarm({id: int, name: String, date: DateTime, location: GeoPoint }) {
+Alarm({id: int, name: String, date: DateTime, duration: Duration, location: GeoPoint}) {
+_id = id;
+_name = name;
 _dateTime = date;
-_location = location;
+_duration = duration;
+// _location = location;
 }
 
 //Getters and Setters
