@@ -10,6 +10,11 @@ ThemeData buildTheme() {
         fontSize: 55.0,
         color: Colors.amber,
       ),
+      title: base.title.copyWith(
+        fontFamily: 'Pacifico',
+        fontSize: 20.0,
+        color: Colors.black,
+      ),
       button: base.button.copyWith(
         fontFamily: 'Montserrat',
         fontSize: 16.0,

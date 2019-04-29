@@ -41,6 +41,7 @@ class AlarmCard extends StatelessWidget {
           children: <Widget>[
             Text(
               alarm.name,
+              style: Theme.of(context).textTheme.title,
             ),
             // Empty space:
             SizedBox(height: 10.0),
@@ -65,6 +66,9 @@ class AlarmCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Card(
+
+          color: Color.fromARGB(0xff, 0xff, 0xec, 0xb3),
+          //  Colors.amber,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
