@@ -13,6 +13,10 @@ import '../widgets/alarm_card.dart';
 import './login.dart';
 import '../mocks/alarms.dart';
 
+const List<String> emptyQuotes = [
+  "I have a simple philosophy: Fill what's empty. Empty what's full. Scratch where it itches. - Alice Roosevelt Longworth"
+];
+
 class MainPage extends StatefulWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -34,6 +38,7 @@ class MainPageState extends State<MainPage> {
   String messageFromPush = '';
   IncrementBloc bloc = new IncrementBloc();
   AlarmStore _alarmStore = new AlarmStore();
+  bool _emptyList = false; //TODO - fill in Empty List logic
 
   @override
   void initState() {
@@ -136,30 +141,44 @@ class MainPageState extends State<MainPage> {
 
   Widget _buildMainScreenList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Events').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return new Text('${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return new Center(
-                child: CircularProgressIndicator(
-              value: null,
-            ));
-          default:
-            return new ListView(children: createChildren(snapshot));
-        }
-      },
-    );
+        stream: Firestore.instance.collection('Events').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) return new Text('${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return new Center(
+                  child: CircularProgressIndicator(
+                value: null,
+              ));
+            default:
+              {
+                if (_emptyList) {
+                  return Container(
+                      alignment: FractionalOffset.center,
+                      color:Colors.amberAccent,
+                      child: Text(
+                        "The List is Empty!\n\nHurry fill it quick! \n\n Here's a quote for motivation\n" + emptyQuotes[0],
+                        style: Theme.of(context).textTheme.subtitle,
+                        textAlign: TextAlign.center,
+                      ));
+                } else
+                  return new ListView(children: createChildren(snapshot));
+              }
+          }
+        });
   }
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
     // return snapshot.data.documents
     //     .map((document) => (getAlarmRows(document)))
     //     .toList();
-  List<AlarmCard> alarmCards = new List<AlarmCard>();
-  AlarmMocks mocks = new AlarmMocks();
-  mocks.getMockAlarms().forEach((alarm) => (alarmCards.add(new AlarmCard(alarm)))); 
-  return alarmCards;
+
+    List<AlarmCard> alarmCards = new List<AlarmCard>();
+    AlarmMocks mocks = new AlarmMocks();
+    mocks
+        .getMockAlarms()
+        .forEach((alarm) => (alarmCards.add(new AlarmCard(alarm))));
+    return alarmCards;
   }
 
   Widget getAlarmRows(DocumentSnapshot doc) {

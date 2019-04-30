@@ -8,11 +8,11 @@ class AlarmCard extends StatelessWidget {
   bool inFavorites;
   Function onFavoriteButtonPressed;
 
-  AlarmCard(
-      [@required this.alarm,
-      // @required this.inFavorites,
-      // @required this.onFavoriteButtonPressed
-      ]);
+  AlarmCard([
+    @required this.alarm,
+    // @required this.inFavorites,
+    // @required this.onFavoriteButtonPressed
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,22 @@ class AlarmCard extends StatelessWidget {
             // Empty space:
             SizedBox(height: 10.0),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(Icons.timer, size: 20.0),
                 SizedBox(width: 5.0),
-                Text(
-                  new DateFormat.yMMMMd().format(alarm.dateTime) + ' ' + 
-                  new DateFormat.jm().format(alarm.dateTime)
-
+                Text(new DateFormat.yMMMMd().format(alarm.dateTime) +
+                    ' ' +
+                    new DateFormat.jm().format(alarm.dateTime)),
+                Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),),
+                Icon(
+                  Icons.timelapse,
+                  size: 20.0,
                 ),
+                Text(alarm.duration.inHours.toString() +
+                    "h," +
+                    ((alarm.duration.inMinutes - alarm.duration.inHours*60)).toString()+
+                    "m")
               ],
             ),
           ],
@@ -66,7 +74,6 @@ class AlarmCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Card(
-
           color: Color.fromARGB(0xff, 0xff, 0xec, 0xb3),
           //  Colors.amber,
           child: Column(
@@ -78,13 +85,15 @@ class AlarmCard extends StatelessWidget {
               Stack(
                 children: <Widget>[
                   AspectRatio(
-                    aspectRatio: 16.0 / 9.0,
-                    child: Image.asset('./assets/alarm'+alarm.id.toString()+'.jpg', fit: BoxFit.cover) 
-                    // Image.network(
-                    //   recipe.imageURL,
-                    //   fit: BoxFit.cover,
-                    // ),
-                  ),
+                      aspectRatio: 16.0 / 9.0,
+                      child: Image.asset(
+                          './assets/alarm' + alarm.id.toString() + '.jpg',
+                          fit: BoxFit.cover)
+                      // Image.network(
+                      //   recipe.imageURL,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      ),
                   Positioned(
                     child: _buildFavoriteButton(),
                     top: 2.0,

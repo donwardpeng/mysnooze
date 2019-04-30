@@ -15,6 +15,12 @@ ThemeData buildTheme() {
         fontSize: 20.0,
         color: Colors.black,
       ),
+      subtitle:base.subtitle.copyWith(
+        fontFamily: 'Montserrat',
+        fontSize: 20.0,
+        color: Colors.black,
+      ),
+
       button: base.button.copyWith(
         fontFamily: 'Montserrat',
         fontSize: 16.0,
