@@ -31,8 +31,11 @@ class _InputDropdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(valueText, style: valueStyle),
-            Icon(Icons.arrow_drop_down,
-              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.shade700 : Colors.white70,
+            Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade700
+                  : Colors.white70,
             ),
           ],
         ),
@@ -41,9 +44,86 @@ class _InputDropdown extends StatelessWidget {
   }
 }
 
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectedTime,
+    this.selectDate,
+    this.selectTime,
+  }) : super(key: key);
 
+  final String labelText;
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
 
-class AddAlarmDialog extends StatelessWidget {
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) selectDate(picked);
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null && picked != selectedTime) selectTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.subtitle;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Expanded(
+          flex: 4,
+          child: _InputDropdown(
+            labelText: labelText,
+            valueText: DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(width: 12.0),
+        Expanded(
+          flex: 3,
+          child: _InputDropdown(
+            valueText: selectedTime.format(context),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectTime(context);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class AddAlarmDialog extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return AddAlarmDialogState();
+  }
+}
+
+class AddAlarmDialogState extends State<AddAlarmDialog> {
+  DateTime _fromDate = DateTime.now();
+  TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
+  DateTime _toDate = DateTime.now();
+  TimeOfDay _toTime = const TimeOfDay(hour: 7, minute: 28);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +132,8 @@ class AddAlarmDialog extends StatelessWidget {
         'Add Alarm',
       )),
       body: _buildAddAlarmForm(),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.save,),
+      onPressed: (){},),
     );
   }
 
@@ -70,32 +152,44 @@ class AddAlarmDialog extends StatelessWidget {
                     filled: true,
                     hintText: '',
                     labelText: 'Alarm Name',
-                  ))),
+                  ),
+                  style: Theme.of(context).textTheme.subtitle)),
           Padding(
-              padding: EdgeInsets.all(20),
-              child: (
-                _InputDropdown(
-            labelText: 'Start Date',
-            valueText: DateFormat.yMMMd().format(selectedDate),
-            valueStyle: valueStyle,
-            onPressed: () { _selectDate(context); },
-          ),)
-            ),
+              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              child: (_DateTimePicker(
+                labelText: 'From',
+                selectedDate: _fromDate,
+                selectedTime: _fromTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    _fromDate = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    _fromTime = time;
+                  });
+                },
+              ))),
+          Padding(
+              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              child: (_DateTimePicker(
+                labelText: 'To',
+                selectedDate: _toDate,
+                selectedTime: _toTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    _toDate = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    _toTime = time;
+                  });
+                },
+              ))),
         ],
       ),
     );
   }
 }
-
-Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate)
-      selectDate(picked);
-  }
-
-
