@@ -5,7 +5,6 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'dart:async';
-import '../helpers/read_alarms.dart';
 import '../bloc/bloc_base.dart';
 import '../models/state.dart';
 import '../state_widget.dart';
@@ -13,6 +12,7 @@ import '../widgets/alarm_card.dart';
 import './login.dart';
 import '../mocks/alarms.dart';
 import '../ui/add_alarm_dialog.dart';
+import '../models/alarm.dart';
 
 const List<String> emptyQuotes = [
   "I have a simple philosophy: Fill what's empty. Empty what's full. Scratch where it itches. - Alice Roosevelt Longworth"
@@ -38,8 +38,8 @@ class MainPageState extends State<MainPage> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageFromPush = '';
   IncrementBloc bloc = new IncrementBloc();
-  AlarmStore _alarmStore = new AlarmStore();
-  bool _emptyList = false; //TODO - fill in Empty List logic
+  // AlarmStore _alarmStore = new AlarmStore();
+  List<Alarm> _alarms = new List<Alarm>();
 
   @override
   void initState() {
@@ -158,7 +158,7 @@ class MainPageState extends State<MainPage> {
               ));
             default:
               {
-                if (_emptyList) {
+                if (!snapshot.hasData) {
                   return Container(
                       alignment: FractionalOffset.center,
                       color: Colors.amberAccent,
@@ -176,15 +176,23 @@ class MainPageState extends State<MainPage> {
   }
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
+    _alarms.clear();
+    snapshot.data.documents.forEach((doc) => 
+          _alarms.add(new Alarm(id: doc['Id'], name: doc['Name'], 
+          date: doc['Date'].toDate(), duration: new Duration(minutes: doc['Duration']))));
+    
+
     // return snapshot.data.documents
     //     .map((document) => (getAlarmRows(document)))
     //     .toList();
-
     List<AlarmCard> alarmCards = new List<AlarmCard>();
-    AlarmMocks mocks = new AlarmMocks();
-    mocks
-        .getMockAlarms()
-        .forEach((alarm) => (alarmCards.add(new AlarmCard(alarm))));
+
+    _alarms.forEach((alarm) =>  (alarmCards.add(new AlarmCard(alarm))));
+
+    // AlarmMocks mocks = new AlarmMocks();
+    // mocks
+    //     .getMockAlarms()
+    //     .forEach((alarm) => (alarmCards.add(new AlarmCard(alarm))));
     return alarmCards;
   }
 
