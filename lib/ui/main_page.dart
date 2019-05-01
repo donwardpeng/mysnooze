@@ -12,6 +12,7 @@ import '../state_widget.dart';
 import '../widgets/alarm_card.dart';
 import './login.dart';
 import '../mocks/alarms.dart';
+import '../ui/add_alarm_dialog.dart';
 
 const List<String> emptyQuotes = [
   "I have a simple philosophy: Fill what's empty. Empty what's full. Scratch where it itches. - Alice Roosevelt Longworth"
@@ -132,7 +133,12 @@ class MainPageState extends State<MainPage> {
         child: Icon(Icons.add),
         tooltip: 'Add an Alarm',
         onPressed: () {
-          bloc.incrementCounter.add(null);
+          // bloc.incrementCounter.add(null);
+          Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) {
+                return new AddAlarmDialog();
+              },
+              fullscreenDialog: true));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -155,9 +161,10 @@ class MainPageState extends State<MainPage> {
                 if (_emptyList) {
                   return Container(
                       alignment: FractionalOffset.center,
-                      color:Colors.amberAccent,
+                      color: Colors.amberAccent,
                       child: Text(
-                        "The List is Empty!\n\nHurry fill it quick! \n\n Here's a quote for motivation\n" + emptyQuotes[0],
+                        "The List is Empty!\n\nHurry fill it quick! \n\n Here's a quote for motivation\n" +
+                            emptyQuotes[0],
                         style: Theme.of(context).textTheme.subtitle,
                         textAlign: TextAlign.center,
                       ));

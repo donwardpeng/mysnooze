@@ -9,6 +9,7 @@ import './state_widget.dart';
 import './ui/main_page.dart';
 import './ui/login.dart';
 import './ui/login_with_email.dart';
+import './ui/add_alarm_dialog.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => MainPage(),
         '/login': (context) => LoginScreen(),
         '/loginWithEmail': (context) => LoginWithEmailPage(),
+        '/addAlarm': (context) => AddAlarmDialog(),
       },
     );
   }
