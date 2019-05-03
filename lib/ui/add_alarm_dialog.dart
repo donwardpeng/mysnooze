@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../models/alarm.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class _InputDropdown extends StatelessWidget {
   const _InputDropdown({
@@ -123,6 +125,7 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
   TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
   DateTime _toDate = DateTime.now();
   TimeOfDay _toTime = const TimeOfDay(hour: 7, minute: 28);
+  TextEditingController _alarmController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -132,8 +135,20 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
         'Add Alarm',
       )),
       body: _buildAddAlarmForm(),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.save,),
-      onPressed: (){},),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.save,
+        ),
+        onPressed: () {
+          DateTime fromDateTime = new DateTime(_fromDate.year, _fromDate.month,
+              _fromDate.day, _fromTime.hour, _fromTime.minute);
+          // Timestamp alarmDate = Timestamp.fromDate(fromDateTime);
+          addAlarmToFirestore(new Alarm(
+              name: _alarmController.text,
+              date: fromDateTime,
+              duration: new Duration(hours: 2)));
+        },
+      ),
     );
   }
 
@@ -146,6 +161,12 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
               padding: EdgeInsets.all(20),
               child: TextFormField(
                   maxLength: 25,
+                  controller: _alarmController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                  },
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     helperText: 'No more than 20 characters',
@@ -191,5 +212,12 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
         ],
       ),
     );
+  }
+
+  addAlarmToFirestore(Alarm newAlarm) {
+    CollectionReference events = Firestore.instance.collection('Events');
+    Firestore.instance.runTransaction((Transaction tx) async {
+      var _result = await events.add(newAlarm.toJson());
+    });
   }
 }

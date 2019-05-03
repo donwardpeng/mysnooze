@@ -9,7 +9,7 @@ Duration _duration;
 GeoPoint _location;
 
 
-Alarm({id: int, name: String, date: DateTime, duration: Duration, location: GeoPoint}) {
+Alarm({int id = 1, String name, DateTime date, Duration duration, GeoPoint location}) {
 _id = id;
 _name = name;
 _dateTime = date;
@@ -28,4 +28,13 @@ Duration get duration => _duration;
 set duration(Duration duration) => _duration = duration;
 GeoPoint get location => _location;
 set location(GeoPoint location) => _location = location;
+
+Map<String, dynamic> toJson() =>
+  {
+    'Name': _name,
+    'Date': Timestamp.fromDate(_dateTime),
+    'Duration': _duration.inMinutes,
+  };
+
 }
+

@@ -177,33 +177,16 @@ class MainPageState extends State<MainPage> {
 
   List<Widget> createChildren(AsyncSnapshot<QuerySnapshot> snapshot) {
     _alarms.clear();
-    snapshot.data.documents.forEach((doc) => 
-          _alarms.add(new Alarm(id: doc['Id'], name: doc['Name'], 
-          date: doc['Date'].toDate(), duration: new Duration(minutes: doc['Duration']))));
-    
-
-    // return snapshot.data.documents
-    //     .map((document) => (getAlarmRows(document)))
-    //     .toList();
+    snapshot.data.documents.forEach((doc) => _alarms.add(new Alarm(
+        id: doc['Id'],
+        name: doc['Name'],
+        date: doc['Date'].toDate(),
+        duration: new Duration(minutes: doc['Duration']))));
     List<AlarmCard> alarmCards = new List<AlarmCard>();
-
-    _alarms.forEach((alarm) =>  (alarmCards.add(new AlarmCard(alarm))));
-
-    // AlarmMocks mocks = new AlarmMocks();
-    // mocks
-    //     .getMockAlarms()
-    //     .forEach((alarm) => (alarmCards.add(new AlarmCard(alarm))));
+    _alarms.forEach((alarm) => (alarmCards.add(new AlarmCard(alarm))));
     return alarmCards;
   }
 
-  Widget getAlarmRows(DocumentSnapshot doc) {
-    return Row(
-      children: <Widget>[
-        Text(doc['Date'].toString()),
-        Text(doc['Location'].toString())
-      ],
-    );
-  }
 
   void _onItemTapped(int index) {
     setState(() {
