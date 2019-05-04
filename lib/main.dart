@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import './ui/theme.dart';
-import './ui/login.dart';
 import './state_widget.dart';
 import './ui/main_page.dart';
 import './ui/login.dart';

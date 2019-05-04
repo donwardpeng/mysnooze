@@ -4,13 +4,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'dart:async';
-import '../bloc/bloc_base.dart';
 import '../models/state.dart';
 import '../state_widget.dart';
 import '../widgets/alarm_card.dart';
 import './login.dart';
-import '../mocks/alarms.dart';
 import '../ui/add_alarm_dialog.dart';
 import '../models/alarm.dart';
 
@@ -31,13 +28,11 @@ class MainPage extends StatefulWidget {
 }
 
 //**Main Page State Class */
-
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   StateModel appState;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageFromPush = '';
-  IncrementBloc bloc = new IncrementBloc();
   // AlarmStore _alarmStore = new AlarmStore();
   List<Alarm> _alarms = new List<Alarm>();
 
@@ -197,49 +192,3 @@ class MainPageState extends State<MainPage> {
   }
 }
 
-class IncrementBloc implements BlocBase {
-  int _counter;
-
-  //
-  // Stream to handle the counter
-  //
-  // outCounter is where the counter value is read from -> outCounter is an stream fed
-  // by the _inAdd sink which takes in a int, and is fed the value of counter every time
-  // the _handleLogic method is called (which is the handler that is called when the
-  // _actionController stream has something in it - this is caused by adding something to
-  // the incrementCounter stream
-
-  // Overall:
-  // Something is added to the incrementCounter sink -> this causes the
-  // _actionController to have something fill it's stream which causes the
-  // _handleLogic method to be called which adds the updated value to the _inAdd sink
-  // which fills the _counterController stream, which allows the outCounter stream to get
-  // data
-  //
-  StreamController<int> _counterController = StreamController<int>();
-  StreamSink<int> get _inAdd => _counterController.sink;
-  Stream<int> get outCounter => _counterController.stream;
-
-  //
-  // Stream to handle the action on the counter
-  //
-  StreamController _actionController = StreamController();
-  StreamSink get incrementCounter => _actionController.sink;
-  //
-  // Constructor
-  //
-  IncrementBloc() {
-    _counter = 0;
-    _actionController.stream.listen(_handleLogic);
-  }
-
-  void dispose() {
-    _actionController.close();
-    _counterController.close();
-  }
-
-  void _handleLogic(data) {
-    _counter = _counter + 1;
-    _inAdd.add(_counter);
-  }
-}
