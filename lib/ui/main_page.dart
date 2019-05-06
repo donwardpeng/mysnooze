@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import '../models/state.dart';
 import '../state_widget.dart';
@@ -124,20 +125,39 @@ class MainPageState extends State<MainPage> {
                   })
             ],
           )),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        tooltip: 'Add an Alarm',
-        onPressed: () {
-          // bloc.incrementCounter.add(null);
-          Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) {
-                return new AddAlarmDialog();
-              },
-              fullscreenDialog: true));
+      floatingActionButton: FutureBuilder<RemoteConfig>(
+        future: setupRemoteConfig(),
+        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+          return snapshot.hasData
+              ? FloatingActionButton(
+                  child: Icon(Icons.add),
+                  tooltip: 'Add an Alarm',
+                  backgroundColor: getButtonColor(
+                      snapshot.data.getString('add_button_color')),
+                  onPressed: () {
+                    
+                    // bloc.incrementCounter.add(null);
+                    Navigator.of(context).push(new MaterialPageRoute<Null>(
+                        builder: (BuildContext context) {
+                          return new AddAlarmDialog();
+                        },
+                        fullscreenDialog: true));
+                  },
+                )
+              : Container();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
+  }
+
+  Color getButtonColor(String color) {
+    print('Button Color = ' + color);
+    if (color.contains('blue')) {
+      return Colors.blue;
+    } else if (color.contains('purple')) {
+      return Colors.purple;
+    }
   }
 
   Widget _buildMainScreenList() {
@@ -182,7 +202,6 @@ class MainPageState extends State<MainPage> {
     return alarmCards;
   }
 
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -192,3 +211,12 @@ class MainPageState extends State<MainPage> {
   }
 }
 
+Future<RemoteConfig> setupRemoteConfig() async {
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  // Enable developer mode to relax fetch throttling
+  remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+  remoteConfig.setDefaults(<String, dynamic>{
+    'add_button_color': 'blue',
+  });
+  return remoteConfig;
+}
