@@ -135,8 +135,6 @@ class MainPageState extends State<MainPage> {
                   backgroundColor: getButtonColor(
                       snapshot.data.getString('add_button_color')),
                   onPressed: () {
-                    
-                    // bloc.incrementCounter.add(null);
                     Navigator.of(context).push(new MaterialPageRoute<Null>(
                         builder: (BuildContext context) {
                           return new AddAlarmDialog();

@@ -90,14 +90,15 @@ class LoginScreen extends StatelessWidget {
                             textColor: Colors.white,
                             textTheme: ButtonTextTheme.primary,
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          LoginWithEmailPage(
-                                            analytics: analytics,
-                                            observer: observer,
-                                          )));
+                              Navigator.pushNamed(context, '/loginWithEmail');
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (BuildContext context) =>
+                              //             LoginWithEmailPage(
+                              //               analytics: analytics,
+                              //               observer: observer,
+                              //             )));
                             }),
                         Padding(
                           padding: EdgeInsets.all(8.0),
