@@ -87,7 +87,9 @@ class AlarmCard extends StatelessWidget {
                   AspectRatio(
                       aspectRatio: 16.0 / 9.0,
                       child: Image.asset(
-                          './assets/alarm' + alarm.id.toString() + '.jpg',
+                          // './assets/alarm' + alarm.id.toString() + '.jpg',
+                      './assets/alarm1.jpg',
+
                           fit: BoxFit.cover)
                       // Image.network(
                       //   recipe.imageURL,
