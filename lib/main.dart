@@ -16,9 +16,14 @@ void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
-  Future<RemoteConfig> remoteConfig = setupRemoteConfig();
-  runApp(new StateWidget(
-    child: new MyApp(),
+  runApp(FutureBuilder<RemoteConfig>(
+    future: setupRemoteConfig(),
+    builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+      return MyApp(remoteConfig: snapshot.data);
+    },
+    //new StateWidget(
+    //child: new MyApp(),
+    //)
   ));
 }
 
@@ -36,13 +41,19 @@ void callRemoteConfig(RemoteConfig remoteConfig) async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends AnimatedWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
+  String _themeString;
+  ThemeData _theTheme;
+  MyApp({this.remoteConfig}) : super(listenable: remoteConfig);
+  final RemoteConfig remoteConfig;
 
   @override
   Widget build(BuildContext context) {
+    print(remoteConfig.getString('add_button_color'));
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "My Snooze",
