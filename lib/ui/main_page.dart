@@ -125,37 +125,19 @@ class MainPageState extends State<MainPage> {
                   })
             ],
           )),
-      floatingActionButton: FutureBuilder<RemoteConfig>(
-        future: setupRemoteConfig(),
-        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-          return snapshot.hasData
-              ? FloatingActionButton(
-                  child: Icon(Icons.add),
-                  tooltip: 'Add an Alarm',
-                  backgroundColor: getButtonColor(
-                      snapshot.data.getString('add_button_color')),
-                  onPressed: () {
-                    Navigator.of(context).push(new MaterialPageRoute<Null>(
-                        builder: (BuildContext context) {
-                          return new AddAlarmDialog();
-                        },
-                        fullscreenDialog: true));
-                  },
-                )
-              : Container();
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        tooltip: 'Add an Alarm',
+        onPressed: () {
+          Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) {
+                return new AddAlarmDialog();
+              },
+              fullscreenDialog: true));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
-  }
-
-  Color getButtonColor(String color) {
-    print('Button Color = ' + color);
-    if (color.contains('blue')) {
-      return Colors.blue;
-    } else if (color.contains('purple')) {
-      return Colors.purple;
-    }
   }
 
   Widget _buildMainScreenList() {
@@ -207,14 +189,4 @@ class MainPageState extends State<MainPage> {
           _selectedIndex.toString());
     });
   }
-}
-
-Future<RemoteConfig> setupRemoteConfig() async {
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  // Enable developer mode to relax fetch throttling
-  remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
-  remoteConfig.setDefaults(<String, dynamic>{
-    'add_button_color': 'blue',
-  });
-  return remoteConfig;
 }

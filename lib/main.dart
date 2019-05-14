@@ -16,29 +16,18 @@ void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
-  runApp(FutureBuilder<RemoteConfig>(
+  runApp(new StateWidget(
+      child: FutureBuilder<RemoteConfig>(
     future: setupRemoteConfig(),
     builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-      return MyApp(remoteConfig: snapshot.data);
+      return snapshot.hasData
+          ? MyApp(remoteConfig: snapshot.data)
+          : Container();
     },
     //new StateWidget(
     //child: new MyApp(),
     //)
-  ));
-}
-
-void callRemoteConfig(RemoteConfig remoteConfig) async {
-  try {
-    // Using default duration to force fetching from remote server.
-    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-    await remoteConfig.activateFetched();
-  } on FetchThrottledException catch (exception) {
-    // Fetch throttled.
-    print(exception);
-  } catch (exception) {
-    print('Unable to fetch remote config. Cached or default values will be '
-        'used');
-  }
+  )));
 }
 
 class MyApp extends AnimatedWidget {
@@ -52,6 +41,7 @@ class MyApp extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
+    callRemoteConfig(remoteConfig);
     print(remoteConfig.getString('add_button_color'));
 
     return MaterialApp(
@@ -81,4 +71,19 @@ Future<RemoteConfig> setupRemoteConfig() async {
     'add_button_color': 'blue',
   });
   return remoteConfig;
+}
+
+void callRemoteConfig(RemoteConfig remoteConfig) async {
+  try {
+    print('calling remote config');
+    // Using default duration to force fetching from remote server.
+    await remoteConfig.fetch(expiration: const Duration(seconds: 10));
+    await remoteConfig.activateFetched();
+  } on FetchThrottledException catch (exception) {
+    // Fetch throttled.
+    print(exception);
+  } catch (exception) {
+    print('Unable to fetch remote config. Cached or default values will be '
+        'used');
+  }
 }
