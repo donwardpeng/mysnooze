@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import '../models/state.dart';
 import '../state_widget.dart';
@@ -32,10 +31,12 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   StateModel appState;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  
   String messageFromPush = '';
   // AlarmStore _alarmStore = new AlarmStore();
   List<Alarm> _alarms = new List<Alarm>();
+
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {

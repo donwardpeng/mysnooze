@@ -38,10 +38,14 @@ class MyApp extends AnimatedWidget {
   ThemeData _theTheme;
   MyApp({this.remoteConfig}) : super(listenable: remoteConfig);
   final RemoteConfig remoteConfig;
+  bool calledRemoteConfig = false;
 
   @override
   Widget build(BuildContext context) {
-    callRemoteConfig(remoteConfig);
+    if (!calledRemoteConfig) {
+      callRemoteConfig(remoteConfig);
+      calledRemoteConfig = true;
+    }
     print(remoteConfig.getString('add_button_color'));
 
     return MaterialApp(
@@ -73,7 +77,7 @@ Future<RemoteConfig> setupRemoteConfig() async {
   return remoteConfig;
 }
 
-void callRemoteConfig(RemoteConfig remoteConfig) async {
+callRemoteConfig(RemoteConfig remoteConfig) async {
   try {
     print('calling remote config');
     // Using default duration to force fetching from remote server.

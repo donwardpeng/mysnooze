@@ -136,19 +136,28 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
       )),
       body: _buildAddAlarmForm(),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.save,
-        ),
-        onPressed: () {
-          DateTime fromDateTime = new DateTime(_fromDate.year, _fromDate.month,
-              _fromDate.day, _fromTime.hour, _fromTime.minute);
-          // Timestamp alarmDate = Timestamp.fromDate(fromDateTime);
-          addAlarmToFirestore(new Alarm(
-              name: _alarmController.text,
-              date: fromDateTime,
-              duration: new Duration(hours: 2)));
-        },
-      ),
+          child: Icon(
+            Icons.save,
+          ),
+          onPressed: () async {
+            DateTime fromDateTime = new DateTime(
+                _fromDate.year,
+                _fromDate.month,
+                _fromDate.day,
+                _fromTime.hour,
+                _fromTime.minute);
+            // Timestamp alarmDate = Timestamp.fromDate(fromDateTime);
+            var result = addAlarmToFirestore(new Alarm(
+                name: _alarmController.text,
+                date: fromDateTime,
+                duration: new Duration(hours: 2)));
+            if (result != null) {}
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Successful Created Alarm '),// + result.documentID),
+            ));
+            await new Future.delayed(const Duration(seconds: 2));
+            Navigator.pop(context);
+          }),
     );
   }
 
@@ -214,10 +223,12 @@ class AddAlarmDialogState extends State<AddAlarmDialog> {
     );
   }
 
-  addAlarmToFirestore(Alarm newAlarm) {
+  DocumentReference addAlarmToFirestore(Alarm newAlarm) {
     CollectionReference events = Firestore.instance.collection('Events');
+    DocumentReference result;
     Firestore.instance.runTransaction((Transaction tx) async {
-      var _result = await events.add(newAlarm.toJson());
+      result = await events.add(newAlarm.toJson());
     });
+    return result;
   }
 }
