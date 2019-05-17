@@ -13,7 +13,7 @@ import './ui/add_alarm_dialog.dart';
 import 'dart:async';
 
 void main() {
-  // debugPaintSizeEnabled = true;
+  //  debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
   runApp(new StateWidget(
@@ -46,12 +46,12 @@ class MyApp extends AnimatedWidget {
       callRemoteConfig(remoteConfig);
       calledRemoteConfig = true;
     }
-    print(remoteConfig.getString('add_button_color'));
+    print(remoteConfig.getString('theme'));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "My Snooze",
-      theme: buildTheme(),
+      title: "My Snooze Test",
+      theme: buildTheme(remoteConfig.getString('theme')),
       // home: LoginScreen(analytics: analytics, observer: observer),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
@@ -72,7 +72,7 @@ Future<RemoteConfig> setupRemoteConfig() async {
   // Enable developer mode to relax fetch throttling
   remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
   remoteConfig.setDefaults(<String, dynamic>{
-    'add_button_color': 'blue',
+    'theme': 'spring',
   });
   return remoteConfig;
 }
