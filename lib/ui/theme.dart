@@ -12,6 +12,11 @@ ThemeData buildTheme(String season) {
             fontSize: 55.0,
             color: Colors.amber[200],
           ),
+          display1: base.headline.copyWith(
+            fontFamily: 'Pacifico',
+            fontSize: 36.0,
+            color: Colors.amber[200],
+          ),
           title: base.title.copyWith(
             fontFamily: 'Pacifico',
             fontSize: 20.0,
@@ -29,6 +34,11 @@ ThemeData buildTheme(String season) {
           headline: base.headline.copyWith(
             fontFamily: 'Pacifico',
             fontSize: 55.0,
+            color: Colors.amber[800],
+          ),
+          display1: base.headline.copyWith(
+            fontFamily: 'Pacifico',
+            fontSize: 36.0,
             color: Colors.amber[800],
           ),
           title: base.title.copyWith(

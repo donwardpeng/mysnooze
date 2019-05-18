@@ -114,6 +114,20 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               IconButton(
+                icon: Icon(Icons.dashboard),
+                tooltip: 'Everything',
+                onPressed: () {
+                  _onItemTapped(0);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  _onItemTapped(0);
+                },
+              ),
+ 
+              IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
                   _onItemTapped(0);
@@ -128,7 +142,7 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
           )),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        tooltip: 'Add an Alarm',
+        tooltip: 'Add an Item',
         onPressed: () {
           Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) {
@@ -141,6 +155,13 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      print('[MAINPAGE] bottomActionBar pressed - index = ' +
+          _selectedIndex.toString());
+    });
+  }
   Widget _buildMainScreenList() {
     return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection('Events').snapshots(),
@@ -183,11 +204,5 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     return alarmCards;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      print('[MAINPAGE] bottomActionBar pressed - index = ' +
-          _selectedIndex.toString());
-    });
-  }
+
 }

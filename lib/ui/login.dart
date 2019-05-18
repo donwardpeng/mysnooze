@@ -52,10 +52,6 @@ class LoginScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        // Hero(
-                        //   tag: 'SnoozeImage',
-                        //   child: Image.asset('assets/snooze.png'),
-                        // ),
                         Container(
                             decoration: BoxDecoration(
                               border: Border.all(width: 3.0),
@@ -64,29 +60,44 @@ class LoginScreen extends StatelessWidget {
                               ),
                               color: Color.fromARGB(64, 0, 0, 0),
                             ),
-                            child: Text(
-                              ' My Snooze ',
-                              style: Theme.of(context).textTheme.headline,
+                            child: Column(
+                              children: <Widget>[
+                                Text('Welcome to',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .display1
+                                        ),
+                                Text(
+                                  ' My Snooze ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline),
+                                      // .apply(color: Colors.white70),
+                                
+                              ],
                             )),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 72.0),
                         ),
                         GoogleSignInButton(onPressed: () {
                           // _signInWithGoogle(context);
-                          StateWidget.of(context).signInWithGoogle(theContext: context);
+                          StateWidget.of(context)
+                              .signInWithGoogle(theContext: context);
                         }),
                         Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(4.0),
                         ),
-                        FacebookSignInButton(onPressed: () {
-                          _signInWithFacebook();
-                        }),
+                        FacebookSignInButton(
+                            text: 'Sign in with Facebook',
+                            onPressed: () {
+                              _signInWithFacebook();
+                            }),
                         Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(4.0),
                         ),
                         RaisedButton(
-                            child: Text('Sign in/Create Account with Email'),
-                            color: Theme.of(context).accentColor,
+                            child: Text('Sign up with Email'),
+                            color: Colors.grey,
                             textColor: Colors.white,
                             textTheme: ButtonTextTheme.primary,
                             onPressed: () {
@@ -101,15 +112,15 @@ class LoginScreen extends StatelessWidget {
                               //             )));
                             }),
                         Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(4.0),
                         ),
-                        FlatButton(
+                        RaisedButton(
                           child: Text(
-                            'Skip login - no account',
+                            'Have an account? Log in.',
                           ),
-                          color: Color.fromARGB(32, 0, 0, 0),
+                          color: Theme.of(context).accentColor,
                           onPressed: () {
-                            print("sign in anonymously pressed");
+                            Navigator.pushNamed(context, '/loginWithEmail');
                           },
                         ),
                         Padding(
