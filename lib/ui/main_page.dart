@@ -113,6 +113,7 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              
               IconButton(
                 icon: Icon(Icons.dashboard),
                 tooltip: 'Everything',
